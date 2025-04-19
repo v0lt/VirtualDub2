@@ -1565,12 +1565,12 @@ void VideoSourceAVI::redoKeyFlags(vdfastvector<uint32>& newFlags) {
 				if (!setDecompressedFormat(8))
 					throw MyError("Video decompressor is incapable of decompressing to an RGB format.");
 
-	lpInputBuffer = new(std::nothrow) char[((lMaxFrame + 7) & -8) + lMaxFrame];
+	lpInputBuffer = new_nothrow char[((lMaxFrame + 7) & -8) + lMaxFrame];
 	if (!lpInputBuffer) {
 		throw MyMemoryError();
 	}
 
-	pFrameSums = new(std::nothrow) long[(size_t)(mSampleLast - mSampleFirst)];
+	pFrameSums = new_nothrow long[(size_t)(mSampleLast - mSampleFirst)];
 	if (!pFrameSums) {
 		delete[] lpInputBuffer;
 		throw MyMemoryError();
@@ -1690,7 +1690,7 @@ int VideoSourceAVI::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint
 	// MJPEG modification mode?
 
 	if (mjpeg_mode) {
-		int res;
+		int res = IVDStreamSource::kBufferTooSmall;
 		LONG lBytes, lSamples;
 		long lOffset, lLength;
 
@@ -1711,7 +1711,7 @@ int VideoSourceAVI::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint
 				if (mjpeg_reorder_buffer_size)
 					res = pSource->Read(lStart, 1, mjpeg_reorder_buffer, mjpeg_reorder_buffer_size, &lBytes, &lSamples);
 
-				if (res == IVDStreamSource::kBufferTooSmall || !mjpeg_reorder_buffer_size) {
+				if (IVDStreamSource::kBufferTooSmall == res) {
 					void *new_buffer;
 					int new_size;
 

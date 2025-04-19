@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <ctype.h>
+#include <memory>
 
 #include "oshelper.h"
 #include <vd2/system/file.h>
@@ -526,19 +527,12 @@ const void *VideoSourceImages::getFrame(VDPosition frameNum) {
 		return mpFrameBuffer;
 
 	if (!read(frameNum, 1, NULL, 0x7FFFFFFF, &lBytes, NULL) && lBytes) {
-		char *pBuffer = new char[lBytes];
+		auto buffer = std::make_unique<char[]>(lBytes);
 
-		try {
-			uint32 lReadBytes;
+		uint32 lReadBytes;
 
-			read(frameNum, 1, pBuffer, lBytes, &lReadBytes, NULL);
-			pFrame = streamGetFrame(pBuffer, lReadBytes, FALSE, frameNum, frameNum);
-		} catch(MyError e) {
-			delete[] pBuffer;
-			throw;
-		}
-
-		delete[] pBuffer;
+		read(frameNum, 1, buffer.get(), lBytes, &lReadBytes, NULL);
+		pFrame = streamGetFrame(buffer.get(), lReadBytes, FALSE, frameNum, frameNum);
 	}
 
 	return pFrame;
