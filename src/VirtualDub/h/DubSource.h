@@ -21,7 +21,6 @@
 #ifdef _MSC_VER
 	#pragma once
 #endif
-
 #ifndef f_VD2_SYSTEM_FRACTION_H
 	#include <vd2/system/fraction.h>
 #endif
@@ -99,7 +98,7 @@ public:
 class DubSource : public vdrefcounted<IVDStreamSource> {
 private:
 	std::unique_ptr<char[]>	format;
-	int format_len = 0;
+	int		format_len{};
 
 protected:
 	void *allocFormat(int format_len);
@@ -109,68 +108,67 @@ protected:
 	VDAVIStreamInfo	streamInfo;
 
 	DubSource();
-	virtual ~DubSource();
 
 public:
 	VDStringA profile_comment;
 
-	virtual const char* GetProfileComment() const { return profile_comment.empty() ? 0:profile_comment.c_str(); }
-	virtual void SetProfileComment(const char* s) { profile_comment = s; }
+	const char* GetProfileComment() const override { return profile_comment.empty() ? 0:profile_comment.c_str(); }
+	void SetProfileComment(const char* s) override { profile_comment = s; }
 
-	virtual VDPosition getLength() {
+	VDPosition getLength() override {
 		return mSampleLast - mSampleFirst;
 	}
 
-	virtual VDPosition getStart() {
+	VDPosition getStart() override {
 		return mSampleFirst;
 	}
 
-	virtual VDPosition getEnd() {
+	VDPosition getEnd() override {
 		return mSampleLast;
 	}
 
-	virtual const VDFraction getRate() {
+	const VDFraction getRate() override {
 		return VDFraction(streamInfo.dwRate, streamInfo.dwScale);
 	}
 
-	virtual const VDAVIStreamInfo& getStreamInfo() {
+	const VDAVIStreamInfo& getStreamInfo() override {
 		return streamInfo;
 	}
 
-	virtual int read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
+	int read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
 	virtual int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) = 0;
 
-	void *getFormat() const { return format.get(); }
-	int getFormatLen() const { return format_len; }
+	void *getFormat() const override { return format.get(); }
+	int getFormatLen() const override { return format_len; }
 
-	virtual bool isStreaming();
+	bool isStreaming() override;
 
 
-	virtual void streamBegin(bool fRealTime, bool bForceReset);
-	virtual void streamEnd();
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamEnd() override;
 
-	virtual ErrorMode getDecodeErrorMode() { return kErrorModeReportAll; }
-	virtual void setDecodeErrorMode(ErrorMode mode) {}
-	virtual bool isDecodeErrorModeSupported(ErrorMode mode) { return mode == kErrorModeReportAll; }
+	ErrorMode getDecodeErrorMode() override { return kErrorModeReportAll; }
+	void setDecodeErrorMode(ErrorMode mode) override  {}
+	bool isDecodeErrorModeSupported(ErrorMode mode) override { return mode == kErrorModeReportAll; }
 
-	virtual VDPosition msToSamples(VDTime lMs) const {
+	VDPosition msToSamples(VDTime lMs) const override {
 		const sint64 denom = (sint64)1000 * streamInfo.dwScale;
 		return (lMs * streamInfo.dwRate + (denom >> 1)) / denom;
 	}
 
-	virtual VDTime samplesToMs(VDPosition lSamples) const {
+	VDTime samplesToMs(VDPosition lSamples) const override {
 		return ((lSamples * streamInfo.dwScale) * 1000 + (streamInfo.dwRate >> 1)) / streamInfo.dwRate;
 	}
 
-	virtual VDPosition TimeToPositionVBR(VDTime us) const {
+	VDPosition TimeToPositionVBR(VDTime us) const override {
 		return VDRoundToInt64(us * (double)streamInfo.dwRate / (double)streamInfo.dwScale * (1.0 / 1000000.0));
 	}
 
-	virtual VDTime PositionToTimeVBR(VDPosition samples) const {
+	VDTime PositionToTimeVBR(VDPosition samples) const override {
 		return VDRoundToInt64(samples * (double)streamInfo.dwScale / (double)streamInfo.dwRate * 1000000.0);
 	}
 
-	virtual VBRMode GetVBRMode() const { return kVBRModeNone; }
+	VBRMode GetVBRMode() const override { return kVBRModeNone; }
 };
 
 #endif

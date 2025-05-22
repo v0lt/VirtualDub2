@@ -66,29 +66,28 @@ const char *const kModeNames[]={
 class VDVideoSourceTest : public VideoSource {
 public:
 	VDVideoSourceTest(int mode, int scale);
-	~VDVideoSourceTest();
 
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
-	bool _isKey(VDPosition samp)					{ return true; }
-	VDPosition nearestKey(VDPosition lSample)			{ return lSample; }
-	VDPosition prevKey(VDPosition lSample)				{ return lSample>0 ? lSample-1 : -1; }
-	VDPosition nextKey(VDPosition lSample)				{ return lSample<mSampleLast ? lSample+1 : -1; }
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
+	bool _isKey(VDPosition samp) override { return true; }
+	VDPosition nearestKey(VDPosition lSample) override	{ return lSample; }
+	VDPosition prevKey(VDPosition lSample) override		{ return lSample>0 ? lSample-1 : -1; }
+	VDPosition nextKey(VDPosition lSample) override		{ return lSample<mSampleLast ? lSample+1 : -1; }
 
-	bool setTargetFormat(VDPixmapFormatEx format);
+	bool setTargetFormat(VDPixmapFormatEx format) override;
 
-	void invalidateFrameBuffer()			{ mCachedFrame = -1; }
-	bool isFrameBufferValid()				{ return mCachedFrame >= 0; }
-	bool isStreaming()						{ return false; }
+	void invalidateFrameBuffer() override	{ mCachedFrame = -1; }
+	bool isFrameBufferValid() override		{ return mCachedFrame >= 0; }
+	bool isStreaming() override				{ return false; }
 
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_num);
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_num) override;
 
-	const void *getFrame(VDPosition frameNum);
+	const void *getFrame(VDPosition frameNum) override;
 
-	char getFrameTypeChar(VDPosition lFrameNum)	{ return 'K'; }
-	eDropType getDropType(VDPosition lFrameNum)	{ return kIndependent; }
-	bool isKeyframeOnly()					{ return true; }
-	bool isType1()							{ return false; }
-	bool isDecodable(VDPosition sample_num)		{ return true; }
+	char getFrameTypeChar(VDPosition lFrameNum) override { return 'K'; }
+	eDropType getDropType(VDPosition lFrameNum) override { return kIndependent; }
+	bool isKeyframeOnly() override			{ return true; }
+	bool isType1() override					{ return false; }
+	bool isDecodable(VDPosition sample_num) override	{ return true; }
 
 private:
 	void DrawRotatingCubeFrame(VDPixmap& dst, bool interlaced, bool oddField, int frameIdx, bool isyuv, int variant=0);
@@ -237,9 +236,6 @@ VDVideoSourceTest::VDVideoSourceTest(int mode, int scale)
 	}
 
 	VDPixmapCreateRoundRegion(mTextOutlineBrush, 16.0f * mScale);
-}
-
-VDVideoSourceTest::~VDVideoSourceTest() {
 }
 
 int VDVideoSourceTest::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *plBytesRead, uint32 *plSamplesRead) {
@@ -960,12 +956,12 @@ const void *VDVideoSourceTest::streamGetFrame(const void *inputBuffer, uint32 da
 	}
 
 	mCachedFrame = frame_num;
-	return mpFrameBuffer;
+	return mpFrameBuffer.get();
 }
 
 const void *VDVideoSourceTest::getFrame(VDPosition frameNum) {
 	if (mCachedFrame == frameNum)
-		return mpFrameBuffer;
+		return mpFrameBuffer.get();
 
 	return streamGetFrame(&frameNum, sizeof(VDPosition), FALSE, frameNum, frameNum);
 }

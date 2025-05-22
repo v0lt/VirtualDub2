@@ -259,23 +259,10 @@ extern IVDInputDriver *VDCreateInputDriverAVI2() { return new VDInputDriverAVI2;
 char InputFileAVI::szME[]="AVI Import Filter";
 
 InputFileAVI::InputFileAVI() {
-	fAutomated	= false;
-
-	fAcceptPartial = false;
 	fInternalDecoder = VDPreferencesIsPreferInternalVideoDecodersEnabled();
-	fDisableFastIO = false;
-	iMJPEGMode = 0;
-	fccForceVideo = 0;
-	fccForceVideoHandler = 0;
-	lForceAudioHz = 0;
 
-	pAVIFile = NULL;
-
-	fCompatibilityMode = false;
 	fIgnoreIndex = VDPreferencesAVIIgnoreIndex();
 	fRedoKeyFlags = VDPreferencesAVIRekey();
-
-	fAutoscanSegments = false;
 }
 
 InputFileAVI::~InputFileAVI() {

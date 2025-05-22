@@ -981,77 +981,80 @@ void VDFilterAccelEngine::DownloadCallback2b(DownloadMsg& msg) {
 		return;
 	}
 
-	IVDTProfiler *p = mpTP;
-	VDFilterAccelReadbackBuffer& rbo = *msg.mpRB;
+	do {
+		IVDTProfiler *p = mpTP;
+		VDFilterAccelReadbackBuffer& rbo = *msg.mpRB;
 
-	IVDTSurface *const rt = rbo.GetRenderTarget();
-	IVDTReadbackBuffer *const rb = rbo.GetReadbackBuffer();
+		IVDTSurface *const rt = rbo.GetRenderTarget();
+		IVDTReadbackBuffer *const rb = rbo.GetReadbackBuffer();
 
-	// do readback
-	if (p) {
-		p->BeginScope(0x8040c0, "Readback");
-	}
+		// do readback
+		if (p) {
+			p->BeginScope(0x8040c0, "Readback");
+		}
 
-	VDPROFILEBEGIN("Readback");
-	bool success = rt->Readback(rb);
-	VDPROFILEEND();
+		VDPROFILEBEGIN("Readback");
+		bool success = rt->Readback(rb);
+		VDPROFILEEND();
 
-	if (p) {
-		p->EndScope();
-	}
+		if (p) {
+			p->EndScope();
+		}
 
-	if (!success) {
-		goto xit;
-	}
+		if (!success) {
+			break;
+		}
 
-	// lock and copy planes
-	if (p) {
-		p->BeginScope(0x4080c0, "RB-Lock");
-	}
+		// lock and copy planes
+		if (p) {
+			p->BeginScope(0x4080c0, "RB-Lock");
+		}
 
-	VDPROFILEBEGIN("RB-Lock");
+		VDPROFILEBEGIN("RB-Lock");
 
-	VDTLockData2D lockData;
-	success = rb->Lock(lockData);
+		VDTLockData2D lockData;
+		success = rb->Lock(lockData);
 
-	VDPROFILEEND();
+		VDPROFILEEND();
 
-	if (p) {
-		p->EndScope();
-	}
+		if (p) {
+			p->EndScope();
+		}
 
-	if (!success) {
-		goto xit;
-	}
+		if (!success) {
+			break;
+		}
 
-	if (p) {
-		p->BeginScope(0x8080f0, "RB-Copy");
-	}
+		if (p) {
+			p->BeginScope(0x8080f0, "RB-Copy");
+		}
 
-	VDPROFILEBEGIN("RB-Copy");
-	if (!msg.mbDstYUV) {
-		// RGB destination case
-		VDMemcpyRect(msg.mpDst[0], msg.mDstPitch[0], lockData.mpData, lockData.mPitch, 4*msg.mWidth, msg.mHeight);
-	} else {
-		// YUV destination case (plane dethreading)
-		const uint32 w = msg.mWidth;
-		const uint32 h = msg.mHeight;
+		VDPROFILEBEGIN("RB-Copy");
+		if (!msg.mbDstYUV) {
+			// RGB destination case
+			VDMemcpyRect(msg.mpDst[0], msg.mDstPitch[0], lockData.mpData, lockData.mPitch, 4*msg.mWidth, msg.mHeight);
+		}
+		else {
+			// YUV destination case (plane dethreading)
+			const uint32 w = msg.mWidth;
+			const uint32 h = msg.mHeight;
 
-		VDMemcpyRect(msg.mpDst[0], msg.mDstPitch[0], lockData.mpData, lockData.mPitch, w, h);
-		VDMemcpyRect(msg.mpDst[1], msg.mDstPitch[1], (const char *)lockData.mpData + lockData.mPitch * h, lockData.mPitch, w, h);
-		VDMemcpyRect(msg.mpDst[2], msg.mDstPitch[2], (const char *)lockData.mpData + lockData.mPitch * (h*2), lockData.mPitch, w, h);
-	}
+			VDMemcpyRect(msg.mpDst[0], msg.mDstPitch[0], lockData.mpData, lockData.mPitch, w, h);
+			VDMemcpyRect(msg.mpDst[1], msg.mDstPitch[1], (const char *)lockData.mpData + lockData.mPitch * h, lockData.mPitch, w, h);
+			VDMemcpyRect(msg.mpDst[2], msg.mDstPitch[2], (const char *)lockData.mpData + lockData.mPitch * (h*2), lockData.mPitch, w, h);
+		}
 
-	rb->Unlock();
-	VDPROFILEEND();
+		rb->Unlock();
+		VDPROFILEEND();
 
-	if (p) {
-		p->EndScope();
-	}
+		if (p) {
+			p->EndScope();
+		}
 
-	msg.mbSuccess = true;
+		msg.mbSuccess = true;
 
-xit:
+	} while (false);
+
 	if (mpTC->IsDeviceLost()) {
 		msg.mbDeviceLost = true;
 	}

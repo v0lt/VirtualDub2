@@ -28,14 +28,13 @@
 class VDInputFileANIM : public InputFile {
 public:
 	VDInputFileANIM();
-	~VDInputFileANIM();
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 
 	void setAutomated(bool fAuto);
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 
 public:
 	struct FrameInfo {
@@ -77,31 +76,30 @@ protected:
 class VDVideoSourceANIM : public VideoSource {
 public:
 	VDVideoSourceANIM(VDInputFileANIM *parent);
-	~VDVideoSourceANIM();
 
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
-	bool _isKey(VDPosition samp);
-	VDPosition nearestKey(VDPosition lSample);
-	VDPosition prevKey(VDPosition lSample);
-	VDPosition nextKey(VDPosition lSample);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
+	bool _isKey(VDPosition samp) override;
+	VDPosition nearestKey(VDPosition lSample) override;
+	VDPosition prevKey(VDPosition lSample) override;
+	VDPosition nextKey(VDPosition lSample) override;
 
-	bool setTargetFormat(VDPixmapFormatEx format);
+	bool setTargetFormat(VDPixmapFormatEx format) override;
 
-	void invalidateFrameBuffer()				{ mCachedFrame = -1; }
-	bool isFrameBufferValid()					{ return mCachedFrame >= 0; }
-	bool isStreaming()							{ return false; }
+	void invalidateFrameBuffer() override		{ mCachedFrame = -1; }
+	bool isFrameBufferValid() override			{ return mCachedFrame >= 0; }
+	bool isStreaming() override					{ return false; }
 
-	const void *getFrame(VDPosition lFrameDesired);
+	const void *getFrame(VDPosition lFrameDesired) override;
 
-	void streamBegin(bool fRealTime, bool bForceReset);
-	void streamEnd();
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample);
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamEnd() override;
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample) override;
 
-	char getFrameTypeChar(VDPosition lFrameNum)	{ return !lFrameNum ? 'K' : ' '; }
-	eDropType getDropType(VDPosition lFrameNum)	{ return !lFrameNum ? kIndependent : kDependant; }
-	bool isKeyframeOnly()						{ return mFrameCount == 1; }
-	bool isType1()								{ return false; }
-	bool isDecodable(VDPosition sample_num)		{ return !sample_num || mCachedFrame == sample_num-1; }
+	char getFrameTypeChar(VDPosition lFrameNum) override	{ return !lFrameNum ? 'K' : ' '; }
+	eDropType getDropType(VDPosition lFrameNum) override	{ return !lFrameNum ? kIndependent : kDependant; }
+	bool isKeyframeOnly() override							{ return mFrameCount == 1; }
+	bool isType1() override									{ return false; }
+	bool isDecodable(VDPosition sample_num) override		{ return !sample_num || mCachedFrame == sample_num-1; }
 
 private:
 	void DecompressMode5(const uint8 *src, uint32 srclen, uint8 *dst, ptrdiff_t planepitch);

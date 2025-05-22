@@ -34,7 +34,6 @@ extern HINSTANCE g_hInst;
 class VDInputFileGIFSharedData : public vdrefcounted<IVDRefCount> {
 public:
 	VDInputFileGIFSharedData();
-	~VDInputFileGIFSharedData();
 
 	void Parse(const wchar_t *filename);
 
@@ -68,9 +67,6 @@ VDInputFileGIFSharedData::VDInputFileGIFSharedData()
 	: mWidth(0)
 	, mHeight(0)
 {
-}
-
-VDInputFileGIFSharedData::~VDInputFileGIFSharedData() {
 }
 
 void VDInputFileGIFSharedData::Parse(const wchar_t *filename) {
@@ -339,35 +335,34 @@ private:
 
 public:
 	VDVideoSourceGIF(VDInputFileGIFSharedData *sharedData);
-	~VDVideoSourceGIF();
 
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
 
-	bool setTargetFormat(VDPixmapFormatEx format);
+	bool setTargetFormat(VDPixmapFormatEx format) override;
 
-	void invalidateFrameBuffer()				{ mCachedFrame = -1; }
-	bool isFrameBufferValid()					{ return mCachedFrame >= 0; }
-	bool isStreaming()							{ return false; }
+	void invalidateFrameBuffer() override		{ mCachedFrame = -1; }
+	bool isFrameBufferValid() override			{ return mCachedFrame >= 0; }
+	bool isStreaming() override					{ return false; }
 
-	const void *getFrame(VDPosition lFrameDesired);
+	const void *getFrame(VDPosition lFrameDesired) override;
 	uint32 getPixelDepth()						{ return mpSharedData->mPixelDepth; }
 	uint32 getColors()							{ return mpSharedData->mColors; }
-	void streamBegin(bool, bool bForceReset) {
+	void streamBegin(bool, bool bForceReset) override {
 		if (bForceReset)
 			streamRestart();
 	}
 
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample);
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample) override;
 
-	char getFrameTypeChar(VDPosition lFrameNum)	{ return isKey(lFrameNum) ? 'K' : ' '; }
-	eDropType getDropType(VDPosition lFrameNum)	{ return isKey(lFrameNum) ? kDependant : kIndependent; }
-	bool isKey(VDPosition lSample)				{ return lSample >= 0 && lSample < (VDPosition)mpSharedData->mImages.size() && (0x80000000 & mpSharedData->mImages[(uint32)lSample].mOffsetAndKey) != 0; }
+	char getFrameTypeChar(VDPosition lFrameNum)	override { return isKey(lFrameNum) ? 'K' : ' '; }
+	eDropType getDropType(VDPosition lFrameNum)	override { return isKey(lFrameNum) ? kDependant : kIndependent; }
+	bool isKey(VDPosition lSample)				override { return lSample >= 0 && lSample < (VDPosition)mpSharedData->mImages.size() && (0x80000000 & mpSharedData->mImages[(uint32)lSample].mOffsetAndKey) != 0; }
 
-	VDPosition nearestKey(VDPosition lSample) {
+	VDPosition nearestKey(VDPosition lSample) override {
 		return isKey(lSample) ? lSample : prevKey(lSample);
 	}
 
-	VDPosition prevKey(VDPosition lSample) {
+	VDPosition prevKey(VDPosition lSample) override {
 		if (lSample < 0)
 			return -1;
 
@@ -384,7 +379,7 @@ public:
 		return -1;
 	}
 
-	VDPosition nextKey(VDPosition lSample) {
+	VDPosition nextKey(VDPosition lSample) override {
 		if (lSample < 0)
 			lSample = 0;
 
@@ -401,8 +396,8 @@ public:
 		return -1;
 	}
 
-	bool isKeyframeOnly()						{ return mpSharedData->mbKeyframeOnly; }
-	bool isDecodable(VDPosition sample_num)		{ return (mCachedFrame >= 0 && (mCachedFrame == sample_num || mCachedFrame == sample_num - 1)) || isKey(sample_num); }
+	bool isKeyframeOnly() override						{ return mpSharedData->mbKeyframeOnly; }
+	bool isDecodable(VDPosition sample_num) override	{ return (mCachedFrame >= 0 && (mCachedFrame == sample_num || mCachedFrame == sample_num - 1)) || isKey(sample_num); }
 };
 
 VDVideoSourceGIF::VDVideoSourceGIF(VDInputFileGIFSharedData *sharedData)
@@ -441,9 +436,6 @@ VDVideoSourceGIF::VDVideoSourceGIF(VDInputFileGIFSharedData *sharedData)
 	mSampleLast = mSampleFirst + mpSharedData->mImages.size();
 }
 
-VDVideoSourceGIF::~VDVideoSourceGIF() {
-}
-
 int VDVideoSourceGIF::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) {
 	if (lCount > 1)
 		lCount = 1;
@@ -475,7 +467,7 @@ const void *VDVideoSourceGIF::getFrame(VDPosition frameNum) {
 	uint32 lBytes;
 
 	if (mCachedFrame == frameNum)
-		return mpFrameBuffer;
+		return mpFrameBuffer.get();
 
 	VDPosition current = mCachedFrame + 1;
 	if (current < 0 || current > frameNum)
