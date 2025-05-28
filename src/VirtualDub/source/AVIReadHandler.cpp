@@ -290,23 +290,23 @@ public:
 	AVIReadHandler(const wchar_t *, bool);
 	~AVIReadHandler();
 
-	void AddRef();
-	void Release();
-	IAVIReadStream *GetStream(uint32 fccType, int lParam);
-	void EnableFastIO(bool);
-	bool isOptimizedForRealtime();
-	bool isStreaming();
-	bool isIndexFabricated();
-	bool AppendFile(const wchar_t *pszFile);
-	bool getSegmentHint(const char **ppszPath);
-	void GetTextInfo(tTextInfo& textInfo);
-	void GetTextInfoEncoding(int& codePage, int& countryCode, int& language, int& dialect);
+	void AddRef() override;
+	void Release() override;
+	IAVIReadStream *GetStream(uint32 fccType, int lParam) override;
+	void EnableFastIO(bool) override;
+	bool isOptimizedForRealtime() override;
+	bool isStreaming() override;
+	bool isIndexFabricated() override;
+	bool AppendFile(const wchar_t *pszFile) override;
+	bool getSegmentHint(const char **ppszPath) override;
+	void GetTextInfo(tTextInfo& textInfo) override;
+	void GetTextInfoEncoding(int& codePage, int& countryCode, int& language, int& dialect) override;
 
 	void EnableStreaming(int stream);
 	void DisableStreaming(int stream);
 	void AdjustRealTime(bool fRealTime);
 	void FixCacheProblems(class AVIReadStream *);
-	long ReadData(int stream, void *buffer, sint64 position, long len);
+	long ReadData(int stream, void *buffer, sint64 position, long len) override;
 
 public:	// IAVIReadCacheSource
 	bool Stream(AVIStreamNode *, _int64 pos);

@@ -516,20 +516,20 @@ private:
 
 	static INT_PTR CALLBACK ParseDialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	void setOptions(InputFileOptions *);
-	InputFileOptions *createOptions(const void *buf, uint32 len);
-	InputFileOptions *promptForOptions(VDGUIHandle);
+	void setOptions(InputFileOptions *) override;
+	InputFileOptions *createOptions(const void *buf, uint32 len) override;
+	InputFileOptions *promptForOptions(VDGUIHandle) override;
 public:
 	InputFileMPEG();
-	~InputFileMPEG();
+	~InputFileMPEG() override;
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 	static void _InfoDlgThread(void *pvInfo);
 	static INT_PTR CALLBACK _InfoDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-	void InfoDialog(VDGUIHandle hwndParent);
+	void InfoDialog(VDGUIHandle hwndParent) override;
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 };
 
 
@@ -1031,7 +1031,7 @@ const void *VideoSourceMPEG::streamGetFrame(const void *inputBuffer, uint32 data
 
 		// the "read" function gave us the extra 3 bytes we need
 		if (data_len<=3)
-			return mpFrameBuffer;	// HACK
+			return mpFrameBuffer.get();	// HACK
 
 		const int type = parentPtr->video_sample_list[frame_num].frame_type;
 
@@ -1092,7 +1092,7 @@ const void *VideoSourceMPEG::streamGetFrame(const void *inputBuffer, uint32 data
 		__asm emms
 #endif
 
-	return mpFrameBuffer;
+	return mpFrameBuffer.get();
 }
 
 const void *VideoSourceMPEG::getFrame(VDPosition frameNum64) {
@@ -1114,7 +1114,7 @@ const void *VideoSourceMPEG::getFrame(VDPosition frameNum64) {
 		DecodeFrameBuffer(buffer);
 		mbFBValid = true;
 
-		return mpFrameBuffer;
+		return mpFrameBuffer.get();
 	}
 
 	// I-frames have no prediction, so all we have to do there is decode the I-frame.
@@ -1279,7 +1279,7 @@ const void *VideoSourceMPEG::getFrame(VDPosition frameNum64) {
 }
 
 void VideoSourceMPEG::DecodeFrameBuffer(int buffer) {
-	char *pBuffer = (char *)mpFrameBuffer;
+	char *pBuffer = (char *)mpFrameBuffer.get();
 	const long w = getImageFormat()->biWidth;
 	const long h = getImageFormat()->biHeight;
 

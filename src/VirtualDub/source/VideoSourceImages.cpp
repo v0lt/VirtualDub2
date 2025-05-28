@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <ctype.h>
+#include <memory>
 
 #include "oshelper.h"
 #include <vd2/system/file.h>
@@ -35,31 +36,30 @@ namespace {
 class VideoSourceImages : public VideoSource {
 public:
 	VideoSourceImages(VDInputFileImages *parent);
-	~VideoSourceImages();
 
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
-	bool _isKey(VDPosition samp)					{ return true; }
-	VDPosition nearestKey(VDPosition lSample)			{ return lSample; }
-	VDPosition prevKey(VDPosition lSample)				{ return lSample>0 ? lSample-1 : -1; }
-	VDPosition nextKey(VDPosition lSample)				{ return lSample<mSampleLast ? lSample+1 : -1; }
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
+	bool _isKey(VDPosition samp) override { return true; }
+	VDPosition nearestKey(VDPosition lSample) override	{ return lSample; }
+	VDPosition prevKey(VDPosition lSample) override		{ return lSample>0 ? lSample-1 : -1; }
+	VDPosition nextKey(VDPosition lSample) override		{ return lSample<mSampleLast ? lSample+1 : -1; }
 
-	bool setTargetFormat(VDPixmapFormatEx format);
+	bool setTargetFormat(VDPixmapFormatEx format) override;
 
-	void invalidateFrameBuffer()			{ mCachedFrame = -1; }
-	bool isFrameBufferValid()				{ return mCachedFrame >= 0; }
-	bool isStreaming()						{ return false; }
+	void invalidateFrameBuffer() override	{ mCachedFrame = -1; }
+	bool isFrameBufferValid() override		{ return mCachedFrame >= 0; }
+	bool isStreaming() override				{ return false; }
 
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample);
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample) override;
 
-	const void *getFrame(VDPosition frameNum);
+	const void *getFrame(VDPosition frameNum) override;
 
-	char getFrameTypeChar(VDPosition lFrameNum)	{ return 'K'; }
-	eDropType getDropType(VDPosition lFrameNum)	{ return kIndependent; }
-	bool isKeyframeOnly()					{ return true; }
-	bool isType1()							{ return false; }
-	bool isDecodable(VDPosition sample_num)		{ return true; }
-	bool getInitAlpha()							{ return mInitAlpha; }
-	nsVDPixmap::VDPixmapFormat getInitFormat(){ return mInitFormat; }
+	char getFrameTypeChar(VDPosition lFrameNum) override { return 'K'; }
+	eDropType getDropType(VDPosition lFrameNum) override { return kIndependent; }
+	bool isKeyframeOnly() override			{ return true; }
+	bool isType1() override					{ return false; }
+	bool isDecodable(VDPosition sample_num) override { return true; }
+	bool getInitAlpha()						{ return mInitAlpha; }
+	nsVDPixmap::VDPixmapFormat getInitFormat() { return mInitFormat; }
 
 private:
 	vdrefptr<VDInputFileImages> mpParent;
@@ -188,9 +188,6 @@ VideoSourceImages::VideoSourceImages(VDInputFileImages *parent)
 	streamInfo.rcFrameBottom			= (uint16)getImageFormat()->biHeight;
 }
 
-VideoSourceImages::~VideoSourceImages() {
-}
-
 int VideoSourceImages::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *plBytesRead, uint32 *plSamplesRead) {
 	if (plBytesRead)
 		*plBytesRead = 0;
@@ -293,7 +290,7 @@ bool VideoSourceImages::setTargetFormat(VDPixmapFormatEx format) {
 			px.w = w;
 			px.h = h;
 			px.pitch = w*8;
-			px.data = mpFrameBuffer;
+			px.data = mpFrameBuffer.get();
 			mTargetFormat = px;
 
 			invalidateFrameBuffer();
@@ -315,7 +312,7 @@ bool VideoSourceImages::setTargetFormat(VDPixmapFormatEx format) {
 			px.w = w;
 			px.h = h;
 			px.pitch = w*2;
-			px.data = mpFrameBuffer;
+			px.data = mpFrameBuffer.get();
 			mTargetFormat = px;
 
 			invalidateFrameBuffer();
@@ -338,7 +335,7 @@ bool VideoSourceImages::setTargetFormat(VDPixmapFormatEx format) {
 			px.w = w;
 			px.h = h;
 			px.pitch = w;
-			px.data = mpFrameBuffer;
+			px.data = mpFrameBuffer.get();
 			mTargetFormat = px;
 
 			invalidateFrameBuffer();
@@ -515,7 +512,7 @@ const void *VideoSourceImages::streamGetFrame(const void *inputBuffer, uint32 da
 
 	mCachedFrame = frame_num;
 
-	return mpFrameBuffer;
+	return mpFrameBuffer.get();
 }
 
 const void *VideoSourceImages::getFrame(VDPosition frameNum) {
@@ -523,22 +520,15 @@ const void *VideoSourceImages::getFrame(VDPosition frameNum) {
 	const void *pFrame = NULL;
 
 	if (mCachedFrame == frameNum)
-		return mpFrameBuffer;
+		return mpFrameBuffer.get();
 
 	if (!read(frameNum, 1, NULL, 0x7FFFFFFF, &lBytes, NULL) && lBytes) {
-		char *pBuffer = new char[lBytes];
+		auto buffer = std::make_unique<char[]>(lBytes);
 
-		try {
-			uint32 lReadBytes;
+		uint32 lReadBytes;
 
-			read(frameNum, 1, pBuffer, lBytes, &lReadBytes, NULL);
-			pFrame = streamGetFrame(pBuffer, lReadBytes, FALSE, frameNum, frameNum);
-		} catch(MyError e) {
-			delete[] pBuffer;
-			throw;
-		}
-
-		delete[] pBuffer;
+		read(frameNum, 1, buffer.get(), lBytes, &lReadBytes, NULL);
+		pFrame = streamGetFrame(buffer.get(), lReadBytes, FALSE, frameNum, frameNum);
 	}
 
 	return pFrame;

@@ -160,9 +160,6 @@ VDVideoSourceANIM::VDVideoSourceANIM(VDInputFileANIM *parent)
 	mPalBuffer.resize(mWidth * mHeight);
 }
 
-VDVideoSourceANIM::~VDVideoSourceANIM() {
-}
-
 int VDVideoSourceANIM::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) {
 	if (lCount > 1)
 		lCount = 1;
@@ -716,12 +713,7 @@ void VDVideoSourceANIM::DecompressMode7Long(const uint8 *src, uint32 srclen, uin
 
 ///////////////////////////////////////////////////////////////////////////
 
-VDInputFileANIM::VDInputFileANIM()
-{
-}
-
-VDInputFileANIM::~VDInputFileANIM() {
-}
+VDInputFileANIM::VDInputFileANIM() = default;
 
 void VDInputFileANIM::Init(const wchar_t *filename) {
 	mFile.open(filename, nsVDFile::kRead | nsVDFile::kDenyWrite | nsVDFile::kOpenExisting);
