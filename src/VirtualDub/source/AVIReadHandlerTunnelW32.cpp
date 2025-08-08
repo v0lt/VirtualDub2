@@ -66,28 +66,28 @@ namespace {
 class AVIReadTunnelStream : public IAVIReadStream {
 public:
 	AVIReadTunnelStream(IAVIReadHandler *, PAVISTREAM, IAvisynthClipInfo *pClipInfo);
-	~AVIReadTunnelStream();
+	~AVIReadTunnelStream() override;
 
-	sint32 BeginStreaming(VDPosition lStart, VDPosition lEnd, long lRate);
-	sint32 EndStreaming();
-	sint32 Info(VDAVIStreamInfo *pasi);
-	bool IsKeyFrame(VDPosition lFrame);
-	sint32 Read(VDPosition lStart, long lSamples, void *lpBuffer, long cbBuffer, long *plBytes, long *plSamples);
-	VDPosition Start();
-	VDPosition End();
-	VDPosition PrevKeyFrame(VDPosition lFrame);
-	VDPosition NextKeyFrame(VDPosition lFrame);
-	VDPosition NearestKeyFrame(VDPosition lFrame);
-	sint32 FormatSize(VDPosition lFrame, long *plSize);
-	sint32 ReadFormat(VDPosition lFrame, void *pFormat, long *plSize);
-	bool isStreaming();
-	bool isKeyframeOnly();
-	bool getVBRInfo(double& bitrate_mean, double& bitrate_stddev, double& maxdev) { return false; }
+	sint32 BeginStreaming(VDPosition lStart, VDPosition lEnd, long lRate) override;
+	sint32 EndStreaming() override;
+	sint32 Info(VDAVIStreamInfo *pasi) override;
+	bool IsKeyFrame(VDPosition lFrame) override;
+	sint32 Read(VDPosition lStart, long lSamples, void *lpBuffer, long cbBuffer, long *plBytes, long *plSamples) override;
+	VDPosition Start() override;
+	VDPosition End() override;
+	VDPosition PrevKeyFrame(VDPosition lFrame) override;
+	VDPosition NextKeyFrame(VDPosition lFrame) override;
+	VDPosition NearestKeyFrame(VDPosition lFrame) override;
+	sint32 FormatSize(VDPosition lFrame, long *plSize) override;
+	sint32 ReadFormat(VDPosition lFrame, void *pFormat, long *plSize) override;
+	bool isStreaming() override;
+	bool isKeyframeOnly() override;
+	bool getVBRInfo(double& bitrate_mean, double& bitrate_stddev, double& maxdev) override { return false; }
 
-	sint64		getSampleBytePosition(VDPosition sample_num) { return -1; }
+	sint64		getSampleBytePosition(VDPosition sample_num) override { return -1; }
 
-	VDPosition	TimeToPosition(VDTime timeInMicroseconds);
-	VDTime		PositionToTime(VDPosition pos);
+	VDPosition	TimeToPosition(VDTime timeInMicroseconds) override;
+	VDTime		PositionToTime(VDPosition pos) override;
 
 private:
 	IAvisynthClipInfo *const mpAvisynthClipInfo;

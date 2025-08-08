@@ -43,15 +43,15 @@ protected:
 
 class InputFileAVI : public InputFile {
 private:
-	IAVIReadHandler *pAVIFile;
+	IAVIReadHandler* pAVIFile{};
 
-	bool fAutomated;
+	bool fAutomated{};
 
-	bool fCompatibilityMode, fIgnoreIndex, fRedoKeyFlags, fInternalDecoder, fDisableFastIO, fAcceptPartial, fAutoscanSegments;
-	int iMJPEGMode;
-	FOURCC fccForceVideo;
-	FOURCC fccForceVideoHandler;
-	long lForceAudioHz;
+	bool fCompatibilityMode{}, fIgnoreIndex, fRedoKeyFlags, fInternalDecoder, fDisableFastIO{}, fAcceptPartial{}, fAutoscanSegments{};
+	int iMJPEGMode{};
+	FOURCC fccForceVideo{};
+	FOURCC fccForceVideoHandler{};
+	long lForceAudioHz{};
 
 	typedef std::vector<vdfastvector<uint32> > NewKeyFlags;
 	NewKeyFlags mNewKeyFlags;
@@ -62,28 +62,28 @@ private:
 	static char szME[];
 public:
 	InputFileAVI();
-	~InputFileAVI();
+	~InputFileAVI() override;
 
-	void Init(const wchar_t *szFile);
-	bool Append(const wchar_t *szFile, uint32 flags);
-	void getAppendFilters(wchar_t *filters, int filters_max);
+	void Init(const wchar_t *szFile) override;
+	bool Append(const wchar_t *szFile, uint32 flags) override;
+	void getAppendFilters(wchar_t *filters, int filters_max) override;
 
-	void GetTextInfo(tFileTextInfo& info);
+	void GetTextInfo(tFileTextInfo& info) override;
 
-	bool isOptimizedForRealtime();
-	bool isStreaming();
+	bool isOptimizedForRealtime() override;
+	bool isStreaming() override;
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 
-	void setOptions(InputFileOptions *_ifo);
-	InputFileOptions *createOptions(const void *buf, uint32 len);
-	InputFileOptions *promptForOptions(VDGUIHandle hwnd);
+	void setOptions(InputFileOptions *_ifo) override;
+	InputFileOptions *createOptions(const void *buf, uint32 len) override;
+	InputFileOptions *promptForOptions(VDGUIHandle hwnd) override;
 	void EnableSegmentAutoscan();
 	void ForceCompatibility();
 	void setAutomated(bool fAuto);
 
-	void InfoDialog(VDGUIHandle hwndParent);
+	void InfoDialog(VDGUIHandle hwndParent) override;
 
 public:
 	void Attach(VDAVIStreamSource *p);

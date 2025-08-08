@@ -80,39 +80,39 @@ protected:
 
 public:
 	AVIOutputStream();
-	virtual ~AVIOutputStream();
+	~AVIOutputStream() override;
 
-	virtual void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
 	virtual void setFormat(const void *pFormat, int len) {
 		mFormat.resize(len);
 		memcpy(mFormat.data(), pFormat, len);
 	}
 
-	virtual void *getFormat() { return mFormat.data(); }
-	virtual int getFormatLen() { return mFormat.size(); }
+	void *getFormat() override { return mFormat.data(); }
+	int getFormatLen() override { return mFormat.size(); }
 
-	virtual const VDXStreamInfo& getStreamInfo() {
+	const VDXStreamInfo& getStreamInfo() override {
 		return streamInfo;
 	}
 
-	virtual void setStreamInfo(const VDXStreamInfo& hdr) {
+	void setStreamInfo(const VDXStreamInfo& hdr) override {
 		streamInfo = hdr;
 		streamInfo.aviHeader.dwLength = 0;
 		streamInfo.aviHeader.dwSuggestedBufferSize = 0;
 	}
 
-	virtual void updateStreamInfo(const VDXStreamInfo& hdr) {
+	void updateStreamInfo(const VDXStreamInfo& hdr) override {
 		streamInfo = hdr;
 	}
 
-	virtual void	write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) = 0;
-	virtual void	write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info) {
+	void	write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override = 0;
+	void	write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info) override {
 		write(packetInfo.flags,pBuffer,cbBuffer,packetInfo.samples);
 	}
 
-	virtual void flush() {}
-	virtual void finish() {}
+	void flush() override {}
+	void finish() override {}
 };
 
 class VDINTERFACE IVDMediaOutput : public IVDUnknown {
@@ -145,25 +145,25 @@ protected:
 
 public:
 	AVIOutput();
-	virtual ~AVIOutput();
+	~AVIOutput() override;
 
 	void *AsInterface(uint32 id);
 
-	virtual bool init(const wchar_t *szFile)=0;
-	virtual void finalize()=0;
+	bool init(const wchar_t *szFile) override = 0;
+	void finalize() override = 0;
 
-	IVDMediaOutputStream *getAudioOutput() { return audioOut; }
-	IVDMediaOutputStream *getVideoOutput() { return videoOut; }
+	IVDMediaOutputStream *getAudioOutput() override { return audioOut; }
+	IVDMediaOutputStream *getVideoOutput() override { return videoOut; }
 };
 
 class AVIOutputNull : public AVIOutput {
 public:
-	~AVIOutputNull();
-	bool init(const wchar_t *szFile);
-	void finalize();
+	~AVIOutputNull() override;
+	bool init(const wchar_t *szFile) override;
+	void finalize() override;
 
-	IVDMediaOutputStream *createAudioStream();
-	IVDMediaOutputStream *createVideoStream();
+	IVDMediaOutputStream *createAudioStream() override;
+	IVDMediaOutputStream *createVideoStream() override;
 };
 
 #endif

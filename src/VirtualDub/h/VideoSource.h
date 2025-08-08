@@ -100,23 +100,22 @@ public:
 
 class VideoSource : public DubSource, public IVDVideoSource {
 protected:
-	void		*mpFrameBuffer;
-	uint32		mFrameBufferSize;
+	std::unique_ptr<void, decltype(&VDAlignedFree)> mpFrameBuffer{ nullptr, &VDAlignedFree };
+	uint32		mFrameBufferSize{};
 
 	vdstructex<VDAVIBitmapInfoHeader> mpTargetFormatHeader;
 	VDPixmap	mTargetFormat;
 	int			mTargetFormatVariant;
-	VDPixmapFormatEx	mDefaultFormat;
-	VDPixmapFormatEx	mSourceFormat;
+	VDPixmapFormatEx	mDefaultFormat{};
+	VDPixmapFormatEx	mSourceFormat{};
 	VDPosition	stream_desired_frame;
-	VDPosition	stream_current_frame;
+	VDPosition	stream_current_frame{ -1 };
 
-	void		*mpStreamOwner;
+	void		*mpStreamOwner{};
 
 	uint32		mPalette[256];
 
-	void *AllocFrameBuffer(long size);
-	void FreeFrameBuffer();
+	void *AllocFrameBuffer(uint32 size);
 
 	bool setTargetFormatVariant(VDPixmapFormatEx format, int variant);
 	virtual bool _isKey(VDPosition lSample);
@@ -133,69 +132,64 @@ public:
 		IFMODE_DISCARD2		=5,
 	};
 
-	virtual ~VideoSource();
+	IVDStreamSource *asStream() override { return this; }
 
-	IVDStreamSource *asStream() { return this; }
+	int AddRef() override { return DubSource::AddRef(); }
+	int Release() override { return DubSource::Release(); }
 
-	int AddRef() { return DubSource::AddRef(); }
-	int Release() { return DubSource::Release(); }
-
-	VDAVIBitmapInfoHeader *getImageFormat() {
+	VDAVIBitmapInfoHeader *getImageFormat() override {
 		return (VDAVIBitmapInfoHeader *)getFormat();
 	}
 
-	virtual const VDFraction getPixelAspectRatio() const;
+	const VDFraction getPixelAspectRatio() const override;
 
-	virtual const void *getFrameBuffer() {
-		return mpFrameBuffer;
+	const void *getFrameBuffer() override {
+		return mpFrameBuffer.get();
 	}
 
-	virtual VDPixmapFormatEx getDefaultFormat() { return mDefaultFormat; }
-	virtual VDPixmapFormatEx getSourceFormat() { return mSourceFormat; }
-	virtual const VDPixmap& getTargetFormat() { return mTargetFormat; }
-	virtual bool setTargetFormat(VDPixmapFormatEx format);
-	virtual bool setDecompressedFormat(int depth);
-	virtual bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih);
+	VDPixmapFormatEx getDefaultFormat() override { return mDefaultFormat; }
+	VDPixmapFormatEx getSourceFormat() override { return mSourceFormat; }
+	const VDPixmap& getTargetFormat() override { return mTargetFormat; }
+	bool setTargetFormat(VDPixmapFormatEx format) override;
+	bool setDecompressedFormat(int depth) override;
+	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih)override;
 
-	VDAVIBitmapInfoHeader *getDecompressedFormat() {
+	VDAVIBitmapInfoHeader *getDecompressedFormat() override {
 		return mpTargetFormatHeader.empty() ? NULL : mpTargetFormatHeader.data();
 	}
 
-	uint32 getDecompressedFormatLen() {
+	uint32 getDecompressedFormatLen() override {
 		return mpTargetFormatHeader.size();
 	}
 
-	virtual void streamSetDesiredFrame(VDPosition frame_num);
-	virtual VDPosition streamGetNextRequiredFrame(bool& is_preroll);
-	virtual int	streamGetRequiredCount(uint32 *totalsize);
-	virtual uint32 streamGetDecodePadding() { return 0; }
-	virtual void streamFillDecodePadding(void *inputBuffer, uint32 data_len) {}
+	void streamSetDesiredFrame(VDPosition frame_num) override;
+	VDPosition streamGetNextRequiredFrame(bool& is_preroll) override;
+	int	streamGetRequiredCount(uint32 *totalsize) override;
+	uint32 streamGetDecodePadding() override { return 0; }
+	void streamFillDecodePadding(void *inputBuffer, uint32 data_len) override {}
 
-	virtual bool streamOwn(void *owner);
-	virtual void streamDisown(void *owner);
-	virtual void streamBegin(bool fRealTime, bool bForceReset);
-	virtual void streamRestart();
-	virtual void streamAppendReinit(){}
+	bool streamOwn(void *owner) override;
+	void streamDisown(void *owner) override;
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamRestart() override;
+	void streamAppendReinit() override {}
 
-	virtual void invalidateFrameBuffer();
-	virtual	bool isFrameBufferValid() = NULL;
+	void invalidateFrameBuffer() override;
 
-	virtual const void *getFrame(VDPosition frameNum) = NULL;
+	bool isKey(VDPosition lSample) override;
+	VDPosition nearestKey(VDPosition lSample) override;
+	VDPosition prevKey(VDPosition lSample) override;
+	VDPosition nextKey(VDPosition lSample) override;
 
-	virtual bool isKey(VDPosition lSample);
-	virtual VDPosition nearestKey(VDPosition lSample);
-	virtual VDPosition prevKey(VDPosition lSample);
-	virtual VDPosition nextKey(VDPosition lSample);
+	bool isKeyframeOnly() override;
+	bool isSyncDecode() override;
+	bool isType1() override;
 
-	virtual bool isKeyframeOnly();
-	virtual bool isSyncDecode();
-	virtual bool isType1();
+	VDPosition	streamToDisplayOrder(VDPosition sample_num) override { return sample_num; }
+	VDPosition	displayToStreamOrder(VDPosition display_num) override { return display_num; }
+	VDPosition	getRealDisplayFrame(VDPosition display_num) override { return display_num; }
 
-	virtual VDPosition	streamToDisplayOrder(VDPosition sample_num) { return sample_num; }
-	virtual VDPosition	displayToStreamOrder(VDPosition display_num) { return display_num; }
-	virtual VDPosition	getRealDisplayFrame(VDPosition display_num) { return display_num; }
-
-	virtual sint64		getSampleBytePosition(VDPosition sample_num) { return -1; }
+	sint64		getSampleBytePosition(VDPosition sample_num) override { return -1; }
 };
 
 #endif

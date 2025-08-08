@@ -107,23 +107,22 @@ public:
 class VDVideoSourceFLM : public VideoSource {
 public:
 	VDVideoSourceFLM(IVDInputFileFLM *parent);
-	~VDVideoSourceFLM();
 
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
 
-	bool setTargetFormat(VDPixmapFormatEx format);
+	bool setTargetFormat(VDPixmapFormatEx format) override;
 
-	void invalidateFrameBuffer()				{ mCachedFrame = -1; }
-	bool isFrameBufferValid()					{ return mCachedFrame >= 0; }
-	bool isStreaming()							{ return false; }
+	void invalidateFrameBuffer() override		{ mCachedFrame = -1; }
+	bool isFrameBufferValid() override			{ return mCachedFrame >= 0; }
+	bool isStreaming() override					{ return false; }
 
-	const void *getFrame(VDPosition lFrameDesired);
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample);
+	const void *getFrame(VDPosition lFrameDesired) override;
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample) override;
 
-	char getFrameTypeChar(VDPosition lFrameNum)	{ return 'K'; }
-	eDropType getDropType(VDPosition lFrameNum)	{ return kIndependent; }
-	bool isKeyframeOnly()						{ return true; }
-	bool isDecodable(VDPosition sample_num)		{ return true; }
+	char getFrameTypeChar(VDPosition lFrameNum) override	{ return 'K'; }
+	eDropType getDropType(VDPosition lFrameNum) override	{ return kIndependent; }
+	bool isKeyframeOnly() override							{ return true; }
+	bool isDecodable(VDPosition sample_num) override		{ return true; }
 
 protected:
 	VDPosition	mCachedFrame;
@@ -177,9 +176,6 @@ VDVideoSourceFLM::VDVideoSourceFLM(IVDInputFileFLM *parent)
 	AllocFrameBuffer(mVisibleFrameSize);
 }
 
-VDVideoSourceFLM::~VDVideoSourceFLM() {
-}
-
 int VDVideoSourceFLM::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) {
 	if (lCount > 1)
 		lCount = 1;
@@ -222,7 +218,7 @@ const void *VDVideoSourceFLM::getFrame(VDPosition frameNum) {
 	const void *pFrame = NULL;
 
 	if (mCachedFrame == frameNum)
-		return mpFrameBuffer;
+		return mpFrameBuffer.get();
 
 	if (!read(frameNum, 1, NULL, 0x7FFFFFFF, &lBytes, NULL) && lBytes) {
 		vdblock<char> buffer(lBytes);
