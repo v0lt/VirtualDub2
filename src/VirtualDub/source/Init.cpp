@@ -426,8 +426,10 @@ static void VDInstallVfwCodecs(const VDStringW& path)
 			continue;
 		}
 
-		ret = ::ICInstall(ICTYPE_VIDEO, icinfo.fccHandler, (LPARAM)dllpath.c_str(), nullptr, ICINSTALL_DRIVERW);
-		if (ret) {
+		//ret = ::ICInstall(ICTYPE_VIDEO, icinfo.fccHandler, (LPARAM)dllpath.c_str(), nullptr, ICINSTALL_DRIVERW);
+		//if (ret) {
+		// we do not use ICInstall and install the codec manually
+		if (key.setString(name.c_str(), dllpath.c_str())) {
 			VDDEBUG(L"VfW codecs: '%s' (%s) was temporarily installed\n",
 				printW_fourcc(icinfo.fccHandler).c_str(),
 				VDFileSplitPath(dllpath.c_str()));
@@ -437,34 +439,27 @@ static void VDInstallVfwCodecs(const VDStringW& path)
 
 static void VDRemoveVfwCodecs(const VDStringW& path)
 {
-	size_t pathlen = path.length();
-	ICINFO icinfo = { sizeof(ICINFO) };
+	const size_t pathlen = path.length();
+	VDStringW value;
+	std::vector<VDStringA> codecnames;
 
-	if (pathlen < std::size(icinfo.szDriver)) {
-		std::vector<DWORD> fccHandlers;
+	VDRegistryKey key("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DRIVERS32");
+	VDRegistryValueIterator it(key);
 
-		for (int i = 0; ::ICInfo(ICTYPE_VIDEO, i, &icinfo); i++) {
-			size_t len = wcsnlen_s(icinfo.szDriver, std::size(icinfo.szDriver));
-			if (_wcsnicmp(icinfo.szDriver, path.c_str(), pathlen) == 0) {
-				fccHandlers.emplace_back(icinfo.fccHandler);
-			}
-		}
-
-		if (fccHandlers.size()) {
-			for (const auto& fccHandler : fccHandlers | std::views::reverse) {
-				::ICRemove(ICTYPE_VIDEO, fccHandler, 0);
-			}
-			// For some reason ICRemove doesn't work!
-			// Therefore, we will remove it manually from the registry.
-			VDRegistryKey key("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DRIVERS32");
-			if (key.isReady()) {
-				for (const auto& fccHandler : fccHandlers | std::views::reverse) {
-					VDStringA valueName("vidc.");
-					valueName += print_fourcc(fccHandler);
-					key.removeValue(valueName.c_str());
+	while (const char* name = it.Next()) {
+		if (strnicmp(name, "vidc.", 5) == 0) {
+			if (key.getString(name, value)) {
+				if (_wcsnicmp(value.c_str(), path.c_str(), pathlen) == 0) {
+					codecnames.emplace_back(name);
 				}
 			}
 		}
+	}
+
+	for (const auto& name : codecnames) {
+		// ::ICRemove(ICTYPE_VIDEO, fccHandler, 0) doesn't work!
+		// Therefore, we will remove it manually from the registry.
+		key.removeValue(name.c_str());
 	}
 }
 
