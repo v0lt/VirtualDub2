@@ -75,26 +75,26 @@ BEGIN
     PUSHBUTTON      "Exit",IDCANCEL,7,114,71,14
 END
 
-IDD_ATTEMPT DIALOG 0, 0, 300, 159
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ATTEMPT DIALOGEX 0, 0, 300, 159
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Kawaiikunee tomboy!"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,189,138,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,243,138,50,14
-    LTEXT           "VirtualDub Setup will now attempt to:",IDC_ACTION,7,7,116,8
+    LTEXT           "VirtualDub2 Setup will now attempt to:",IDC_ACTION,7,7,131,8
     LISTBOX         IDC_ACTIONLIST,7,18,286,112,LBS_NOINTEGRALHEIGHT | LBS_NOSEL | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_ABOUT DIALOG 0, 0, 300, 92
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUT DIALOGEX 0, 0, 300, 92
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About VirtualDub Setup..."
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDCANCEL,124,71,50,14
     ICON            IDI_VIRTUALDUB,IDC_STATIC,7,7,20,20
-    LTEXT           "VirtualDub Setup 1.0\nCopyright (C) 1998 by Avery Lee, All Rights Reserved.\n\nThis program is free software and may be distributed according to the terms of the GNU General Public License.",IDC_STATIC,41,7,252,41
-    LTEXT           "Build 0/release (bleh)",IDC_FINALS_SUCK,41,53,238,8
+    LTEXT           "VirtualDub2 Setup 1.0\nCopyright (C) 1998 by Avery Lee, All Rights Reserved\nCopyright (C) 2024-2026 by v0lt\n\nThis program is free software and may be distributed according to the terms of the GNU General Public License.",IDC_STATIC,41,7,252,50
+    LTEXT           "Build 0/release (bleh)",IDC_FINALS_SUCK,41,60,238,8
 END
 
 
@@ -141,7 +141,7 @@ END
 // RT_MANIFEST
 //
 
-1            RT_MANIFEST             "manifest.xml"
+1                       RT_MANIFEST             "manifest.xml"
 
 
 /////////////////////////////////////////////////////////////////////////////
