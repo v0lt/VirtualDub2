@@ -447,7 +447,7 @@ static void VDRemoveVfwCodecs(const VDStringW& path)
 	VDRegistryValueIterator it(key);
 
 	while (const char* name = it.Next()) {
-		if (strnicmp(name, "vidc.", 5) == 0) {
+		if (_strnicmp(name, "vidc.", 5) == 0) {
 			if (key.getString(name, value)) {
 				if (_wcsnicmp(value.c_str(), path.c_str(), pathlen) == 0) {
 					codecnames.emplace_back(name);
