@@ -358,13 +358,21 @@ void VDEnableExceptionsFromUserCallbacksW32() {
 
 static void VDInstallVfwCodecs(const VDStringW& path)
 {
-	const size_t pathlen = path.length();
+	if (path.length() >= 128 - 4) {
+		// the path and the short filename '.dll' must not exceed 128 characters
+		return;
+	}
 
 	VDDirectoryIterator it((path + L"*.dll").c_str());
 
 	while (it.Next()) {
-		VDDEBUG(L"VfW codecs: Attempting to load \"%s\"\n", it.GetFullPath().c_str());
-		VDStringW dllpath(it.GetFullPath());
+		const VDStringW dllpath(it.GetFullPath());
+		VDDEBUG(L"VfW codecs: Attempting to load \"%s\"\n", dllpath.c_str());
+
+		if (dllpath.length() >= 128) {
+			// dll path length is limited ICINFO::szDriver[128]
+			continue;
+		}
 
 		HMODULE module = LoadLibraryW(dllpath.c_str());
 		if (!module) {
