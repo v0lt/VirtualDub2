@@ -208,6 +208,12 @@ void VDCPUTest() {
 
 ///////////////////////////////////////////////////////////////////////////
 
+const int MAX_INSTANCES = 64;
+const wchar_t* g_appSemName = L"Local\\VirtualDub2Semaphore";
+HANDLE g_hAppSemaphore = NULL;
+
+///////////////////////////////////////////////////////////////////////////
+
 bool g_consoleMode;
 
 class VDConsoleLogger : public IVDLogger {
@@ -698,10 +704,20 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine)
 		guiSetStatus("Autoloaded %d filter(s).", 255, pluginsSucceeded);
 	}
 
-	// Load VfW coders from special folder
+	// create a semaphore to count the number of instances
+	g_hAppSemaphore = CreateSemaphoreW(NULL, MAX_INSTANCES, MAX_INSTANCES, g_appSemName);
+	if (g_hAppSemaphore) {
+		DWORD waitResult = WaitForSingleObject(g_hAppSemaphore, 0);
+		if (waitResult == WAIT_OBJECT_0){
 
-	vdprotected("autoloading VfW codecs from folder at startup") {
-		VDInstallVfwCodecs(VDMakePath(programPath.c_str(), L"vfwcodecs\\"));
+			vdprotected("autoloading VfW codecs from 'vfwcodecs' folder at startup") {
+				VDInstallVfwCodecs(VDMakePath(programPath.c_str(), L"vfwcodecs\\"));
+			}
+
+		} else {
+			CloseHandle(g_hAppSemaphore);
+			g_hAppSemaphore = NULL;
+		}
 	}
 
 	// Detect DivX.
@@ -769,7 +785,17 @@ void Deinit() {
 
 	AVIFileExit();
 
-	VDRemoveVfwCodecs(VDMakePath(VDGetProgramPath().c_str(), L"vfwcodecs\\"));
+	if (g_hAppSemaphore) {
+		LONG prevCount = 0;
+		BOOL releaseResult = ReleaseSemaphore(g_hAppSemaphore, 1, &prevCount);
+		if (releaseResult && prevCount == MAX_INSTANCES - 1) {
+
+			VDRemoveVfwCodecs(VDMakePath(VDGetProgramPath().c_str(), L"vfwcodecs\\"));
+
+		}
+		CloseHandle(g_hAppSemaphore);
+		g_hAppSemaphore = NULL;
+	}
 
 	_CrtCheckMemory();
 
