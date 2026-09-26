@@ -3,7 +3,7 @@
 //
 // Copyright (C) 1998-2009 Avery Lee
 // Copyright (C) 2015-2019 Anton Shekhovtsov
-// Copyright (C) 2025 v0lt
+// Copyright (C) 2025-2026 v0lt
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
@@ -1571,8 +1571,9 @@ void VDPixmapBuffer::init(sint32 width, sint32 height, int f) {
 #endif
 
 	// reject huge allocations
-	if (totalsize64 > (size_t)-1 - 4096)
+	if (totalsize64 > (uint32)-1 - 4096) {
 		throw MyMemoryError();
+	}
 
 	size_t totalsize = (uint32)totalsize64;
 
@@ -1695,8 +1696,9 @@ void VDPixmapBuffer::init(const VDPixmapLayout& layout, uint32 additionalPadding
 #endif
 
 	// reject huge allocations
-	if (totalsize64 > (size_t)-1 - 4096)
+	if (totalsize64 > (uint32)-1 - 4096) {
 		throw MyMemoryError();
+	}
 
 	size_t totalsize = (uint32)totalsize64;
 	ptrdiff_t linsize = (uint32)linsize64;
