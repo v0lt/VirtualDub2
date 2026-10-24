@@ -1,5 +1,9 @@
 VirtualDub2.x change log
 
+2.5.8.x dev
+-----------------------
+
+
 2.5.7.1257 - 2026-10-17
 -----------------------
 Fixed the removal of temporary VFW codec registrations when both x86 and x64 versions of VirtualDub2 were running simultaneously.
