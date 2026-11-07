@@ -2,7 +2,7 @@
 // A/V interface library
 //
 // Copyright (C) 2013 Avery Lee
-// Copyright (C) 2024-2025 v0lt
+// Copyright (C) 2024-2026 v0lt
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
@@ -760,8 +760,8 @@ bool VDScreenGrabberDXGI12::InitRescale(uint32 srcw, uint32 srch, uint32 dstw, u
 		//
 		// A cubic spline filter is nominally 4 taps wide at unity cutoff. A 1/4 ratio gives the
 		// max 16-tap filter.
-		const float h_ratio = std::max<float>(std::min<float>((float)dstw / (float)srcw, 1.0f), 0.25f);
-		const float v_ratio = std::max<float>(std::min<float>((float)dsth / (float)srch, 1.0f), 0.25f);
+		const float h_ratio = std::clamp((float)dstw / (float)srcw, 0.25f, 1.0f);
+		const float v_ratio = std::clamp((float)dsth / (float)srch, 0.25f, 1.0f);
 
 		// create coefficient textures
 		D3D11_SUBRESOURCE_DATA initData = {};

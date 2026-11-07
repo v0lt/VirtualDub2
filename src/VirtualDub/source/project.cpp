@@ -2478,7 +2478,7 @@ void VDProject::MoveToFrame(VDPosition frame, int sync_mode) {
 
 		VDPosition min = mbZoomEnabled ? mposZoomStart : 0;
 		VDPosition max = mbZoomEnabled ? mposZoomEnd : mTimeline.GetLength();
-		frame = std::max<VDPosition>(min, std::min<VDPosition>(frame, max));
+		frame = std::clamp(frame, min, max);
 
 		mposSyncMode = sync_mode;
 		mposCurrentFrame = frame;
@@ -3212,7 +3212,7 @@ void VDProject::StaticPositionCallback(VDPosition start, VDPosition cur, VDPosit
 	VDProject *pthis = (VDProject *)cookie;
 
 	if (pthis->mbPositionCallbackEnabled && !fast_update) {
-		VDPosition frame = std::max<VDPosition>(0, std::min<VDPosition>(cur, pthis->GetFrameCount()));
+		VDPosition frame = std::clamp<VDPosition>(cur, 0, pthis->GetFrameCount());
 
 		pthis->mposCurrentFrame = frame;
 		if (pthis->mpCB)
@@ -3224,7 +3224,7 @@ void VDProject::StaticFastPositionCallback(VDPosition start, VDPosition cur, VDP
 	VDProject *pthis = (VDProject *)cookie;
 
 	if (pthis->mbPositionCallbackEnabled) {
-		VDPosition frame = std::max<VDPosition>(0, std::min<VDPosition>(cur, pthis->GetFrameCount()));
+		VDPosition frame = std::clamp<VDPosition>(cur, 0, pthis->GetFrameCount());
 
 		pthis->mposCurrentFrame = frame;
 		if (pthis->mpCB)
@@ -3236,7 +3236,7 @@ void VDProject::StaticFinalPositionCallback(VDPosition start, VDPosition cur, VD
 	VDProject *pthis = (VDProject *)cookie;
 
 	if (pthis->mbPositionCallbackEnabled && cur==end-1) {
-		VDPosition frame = std::max<VDPosition>(0, std::min<VDPosition>(cur, pthis->GetFrameCount()));
+		VDPosition frame = std::clamp<VDPosition>(cur, 0, pthis->GetFrameCount());
 
 		pthis->mposCurrentFrame = frame;
 		if (pthis->mpCB)

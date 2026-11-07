@@ -3,6 +3,7 @@
 //
 // Copyright (C) 1998-2009 Avery Lee
 // Copyright (C) 2015-2018 Anton Shekhovtsov
+// Copyright (C) 2026 v0lt
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
@@ -1438,12 +1439,9 @@ void VDConvertYCbCrToRGB(int y0, int cb0, int cr0, int ref, VDPixmapFormatEx& fo
 		}
 	}
 
-	if (r<0) r = 0;
-	if (g<0) g = 0;
-	if (b<0) b = 0;
-	if (r>1) r = 1;
-	if (g>1) g = 1;
-	if (b>1) b = 1;
+	r = std::clamp(r, 0.f, 1.f);
+	g = std::clamp(g, 0.f, 1.f);
+	b = std::clamp(b, 0.f, 1.f);
 }
 
 uint32 VDPackRGB(float r0, float g0, float b0) {
@@ -1538,18 +1536,13 @@ void VDConvertRGBToYCbCr(float r, float g, float b, float& y, float& cb, float& 
 	cr += 0.5f / 255.0f;
 }
 
-void VDRoundYCbCr(float y, float cb, float cr, int ref, int& iy, int& icb, int& icr) {
+void VDRoundYCbCr(float y, float cb, float cr, int ref, int& iy, int& icb, int& icr)
+{
 	int mref = vd2::chroma_neutral(ref);
-	iy = VDRoundToInt(y*ref);
-	icb = VDRoundToInt((cb-(128.0f / 255.0f))*ref) + mref;
-	icr = VDRoundToInt((cr-(128.0f / 255.0f))*ref) + mref;
 
-	if (iy<0) iy = 0;
-	if (icb<0) icb = 0;
-	if (icr<0) icr = 0;
-	if (iy>ref) iy = ref;
-	if (icb>ref) icb = ref;
-	if (icr>ref) icr = ref;
+	iy  = std::clamp(VDRoundToInt(y*ref), 0, ref);
+	icb = std::clamp(VDRoundToInt((cb-(128.0f / 255.0f))*ref) + mref, 0, ref);
+	icr = std::clamp(VDRoundToInt((cr-(128.0f / 255.0f))*ref) + mref, 0, ref);
 }
 
 //---------------------------------------------------------------------------------

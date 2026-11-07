@@ -2044,9 +2044,8 @@ static void amplify8(void* buffer, const long lBytes, const int iFactor)
 		uint8_t* dst = (uint8_t*)buffer;
 		do {
 			int y = ((int)*dst * iFactor + lBias) >> 8;
-			y = std::clamp(y, 0, 255);
 
-			*dst++ = (uint8_t)y;
+			*dst++ = (uint8_t)std::clamp(y, 0, 255);
 		} while (--count);
 	}
 }
@@ -2058,9 +2057,8 @@ static void amplify16(void* buffer, const long lBytes, const int iFactor)
 		int16_t* dst = (int16_t*)buffer;
 		do {
 			int y = ((int)*dst * iFactor + 0x80) >> 8;
-			y = std::clamp(y, -0x8000, 0x7FFF);
 
-			*dst++ = (int16_t)y;
+			*dst++ = (int16_t)std::clamp(y, -0x8000, 0x7FFF);
 		} while (--count);
 	}
 }
@@ -2074,9 +2072,8 @@ static void amplify32f(void* buffer, const long lBytes, const int iFactor)
 		float* dst = (float*)buffer;
 		do {
 			float y = *dst * factor;
-			y = std::clamp(y, -1.f, 1.f);
 
-			*dst++ = y;
+			*dst++ = std::clamp(y, -1.f, 1.f);
 		} while (--count);
 	}
 }
