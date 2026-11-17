@@ -1026,7 +1026,7 @@ int main(int argc, char **argv)
 
 	// copy files
 
-	for(const auto& [dstfile, srcfile)] : g_fileCopies) {
+	for(const auto& [dstfile, srcfile] : g_fileCopies) {
 		copy_file(dstfile, srcfile);
 	}
 
