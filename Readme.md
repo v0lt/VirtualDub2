@@ -5,14 +5,12 @@ VirtualDub2 is a video capture/processing utility for Windows.
 ## Minimum system requirements
 
 * SSE2 compatible CPU
-* Windows 8.1 or newer
+* Windows 10 v1607 or newer
 
-### Windows 7
-Windows 7 is not supported (the avlib-1.vdplugin plugin doesn't work), but...
+### Windows 7/8/8.1
+Older versions of Windows are not supported. VirtualDub2 may work, but some features will not be available (the avlib-1.vdplugin plugin doesn't work).
 
-To run the Win32 version on Windows 7, you need to install [Microsoft Visual C++ Redistributable packages for Visual Studio 2015-2022](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version) or [Update for Universal C Runtime in Windows](https://support.microsoft.com/en-us/topic/update-for-universal-c-runtime-in-windows-c0514201-7fe6-95a3-b0a5-287930f3560c).
-
-To run the x64 version on Windows 7, you will need to find and replace the FFmpeg DLL files with Windows 7 support, or use other methods at your own risk.
+You can try replacing the FFmpeg DLL files with ones that support your version of Windows, or use other methods at your own risk.
 
 ## Downloads
 * [Releases](https://github.com/v0lt/VirtualDub2/releases)
