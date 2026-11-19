@@ -32,23 +32,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\VirtualDub.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\VirtualDub.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
     <Import Project="..\VirtualDub-AMD64.props" />
-    <Import Project="..\VirtualDub.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\VirtualDub-AMD64.props" />
-    <Import Project="..\VirtualDub.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -113,10 +102,7 @@
     <ClCompile Include="source\ScreenGrabberGDI.cpp" />
     <ClCompile Include="source\ScreenGrabberGL.cpp" />
     <ClCompile Include="source\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,136 +125,49 @@
   <ItemGroup>
     <None Include="h\d3d11_downscale_shader.inl" />
     <CustomBuild Include="source\cap_screen_glshaders.vdfx">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <Message>
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" glc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename).inl"
+      <Command>"$(VDOutputPath)\asuka" glc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename).inl"
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\%(Filename).inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" glc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename).inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\%(Filename).inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" glc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename).inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\%(Filename).inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" glc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename).inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\%(Filename).inl;%(Outputs)</Outputs>
+      <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>%(RootDir)%(Directory)\..\h\%(Filename).inl;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="source\d3d11_colorconv.fx">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <Message>
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command>"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="source\d3d11_display.fx">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <Message>
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command>"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="source\d3d11_downscale.fx">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <Message>
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command>"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="source\d3d11_pointer.fx">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <Message>
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command>"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fxc10 "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\VDCapture.rc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
