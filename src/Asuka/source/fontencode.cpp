@@ -1,7 +1,7 @@
 // Asuka - VirtualDub Build/Post-Mortem Utility
 //
 // Copyright (C) 2005-2007 Avery Lee
-// Copyright (C) 2024-2025 v0lt
+// Copyright (C) 2024-2026 v0lt
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
@@ -208,6 +208,8 @@ void tool_fontencode(const vdfastvector<const wchar_t*>& args, const vdfastvecto
 	fprintf(f, "\t%d, %d,\n", cellAscent, cellAdvance);
 	fprintf(f, "\t%d,\n", lineGap);
 	fprintf(f, "};\n");
+
+	fclose(f);
 
 	printf("Asuka: %d bytes.\n", datalen);
 }

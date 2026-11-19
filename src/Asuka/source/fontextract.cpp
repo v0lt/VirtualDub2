@@ -1,7 +1,7 @@
 // Asuka - VirtualDub Build/Post-Mortem Utility
 //
 // Copyright (C) 2005-2007 Avery Lee
-// Copyright (C) 2024-2025 v0lt
+// Copyright (C) 2024-2026 v0lt
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
@@ -313,6 +313,8 @@ void tool_fontextract(const vdfastvector<const wchar_t*>& args, const vdfastvect
 	fprintf(f, "\t%d,\t// descent\n", metrics.m.otmDescent);
 	fprintf(f, "\t%u,\t// line gap\n", metrics.m.otmLineGap);
 	fprintf(f, "};\n");
+
+	fclose(f);
 
 	printf("Asuka: %d point bytes, %d command bytes, %d glyph info bytes.\n", (int)points.size(), (int)commands.size(), (endChar - startChar + 1) * 10);
 
