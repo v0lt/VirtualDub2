@@ -1,7 +1,7 @@
 // Asuka - VirtualDub Build/Post-Mortem Utility
 //
 // Copyright (C) 2005 Avery Lee
-// Copyright (C) 2023-2025 v0lt
+// Copyright (C) 2023-2026 v0lt
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
@@ -176,6 +176,7 @@ void tool_psa(const vdfastvector<const wchar_t*>& args, const vdfastvector<const
 		printf("%ls(%d,%zd): parse error\n", filename, line, (t-s) + 1);
 		exit(5);
 	}
+	fclose(f);
 
 	printf("Asuka: Assembly was successful.\n");
 }
