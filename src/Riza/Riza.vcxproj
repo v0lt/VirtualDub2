@@ -58,7 +58,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>h;..\h;res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>h;..\h;autogen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -82,7 +82,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>h;..\h;res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>h;..\h;autogen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -102,7 +102,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>h;..\h;res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>h;..\h;autogen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -125,7 +125,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>h;..\h;res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>h;..\h;autogen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -185,28 +185,28 @@
     <CustomBuild Include="source\displaydx9.fx">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl"
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;$(ProjectDir)source\displaydx9_ff.fxh;$(ProjectDir)source\displaydx9_ps1.fxh;$(ProjectDir)source\displaydx9_ps14.fxh;$(ProjectDir)source\displaydx9_ps2.fxh;$(ProjectDir)source\stddefs.fxh;$(ProjectDir)source\utils.fxh;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl"
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl"
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;$(ProjectDir)source\displaydx9_ff.fxh;$(ProjectDir)source\displaydx9_ps1.fxh;$(ProjectDir)source\displaydx9_ps14.fxh;$(ProjectDir)source\displaydx9_ps2.fxh;$(ProjectDir)source\stddefs.fxh;$(ProjectDir)source\utils.fxh;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fxc "%(FullPath)" "%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl"
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\%(Filename)_shader.inl;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl;%(Outputs)</Outputs>
     </CustomBuild>
     <None Include="source\displaydx9_ff.fxh" />
     <None Include="source\displaydx9_ps1.fxh" />
@@ -214,7 +214,7 @@
     <None Include="source\displaydx9_ps2.fxh" />
     <None Include="source\stddefs.fxh" />
     <None Include="source\utils.fxh" />
-    <None Include="h\displaydx9_shader.inl" />
+    <None Include="autogen\displaydx9_shader.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Asuka\Asuka.vcxproj">

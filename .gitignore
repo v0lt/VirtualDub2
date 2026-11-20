@@ -6,8 +6,8 @@ _out
 *.ncb
 *.suo
 *.aps
-src/VDCapture/h/*.inl
-src/Riza/h/*.inl
+src/Riza/autogen
+src/VDCapture/autogen
 src/VDDisplay/autogen
 src/VDFilters/autogen
 src/VirtualDub/autogen
