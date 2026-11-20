@@ -123,6 +123,9 @@
     <ClInclude Include="..\h\vd2\VDCapture\ScreenGrabberGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="autogen\cap_screen_glshaders.inl" />
+    <None Include="autogen\d3d11_colorconv_shader.inl" />
+    <None Include="autogen\d3d11_display_shader.inl" />
     <None Include="autogen\d3d11_downscale_shader.inl" />
     <CustomBuild Include="source\cap_screen_glshaders.vdfx">
       <Message>
@@ -164,6 +167,7 @@
       <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs>%(RootDir)%(Directory)\..\autogen\%(Filename)_shader.inl;%(Outputs)</Outputs>
     </CustomBuild>
+    <None Include="autogen\d3d11_pointer_shader.inl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\VDCapture.rc">
