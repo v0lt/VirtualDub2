@@ -6,6 +6,7 @@ _out
 *.ncb
 *.suo
 *.aps
+src/Kasumi/autogen
 src/Riza/autogen
 src/VDCapture/autogen
 src/VDDisplay/autogen

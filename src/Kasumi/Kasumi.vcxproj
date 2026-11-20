@@ -58,7 +58,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>h;..\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>h;..\h;autogen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -319,32 +319,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </YASM>
-    <None Include="h\defaultfont.inl" />
+    <None Include="autogen\defaultfont.inl" />
     <CustomBuild Include="data\Tuffy.ttf">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <Message>
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(VDOutputPath)\asuka" fontextract "%(FullPath)" Tuffy 32 127 "%(RootDir)%(Directory)\..\h\defaultfont.inl" g_VDDefaultFont
+      <Command>"$(VDOutputPath)\asuka" fontextract "%(FullPath)" Tuffy 32 127 "%(RootDir)%(Directory)\..\autogen\defaultfont.inl" g_VDDefaultFont
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)\..\h\defaultfont.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(VDOutputPath)\asuka" fontextract "%(FullPath)" Tuffy 32 127 "%(RootDir)%(Directory)\..\h\defaultfont.inl" g_VDDefaultFont
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)\..\h\defaultfont.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(VDOutputPath)\asuka" fontextract "%(FullPath)" Tuffy 32 127 "%(RootDir)%(Directory)\..\h\defaultfont.inl" g_VDDefaultFont
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)\..\h\defaultfont.inl;%(Outputs)</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(VDOutputPath)\asuka" fontextract "%(FullPath)" Tuffy 32 127 "%(RootDir)%(Directory)\..\h\defaultfont.inl" g_VDDefaultFont
-</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\..\h\defaultfont.inl;%(Outputs)</Outputs>
+      <AdditionalInputs>$(VDOutputPath)\asuka.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>%(RootDir)%(Directory)\..\autogen\defaultfont.inl;%(Outputs)</Outputs>
     </CustomBuild>
     <None Include="source\a_triblt.inc" />
   </ItemGroup>
