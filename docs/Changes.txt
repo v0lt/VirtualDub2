@@ -2,7 +2,9 @@ VirtualDub2.x change log
 
 2.6.0.x dev
 -----------------------
-
+Updated avlib-1.vdplugin 1.2.0.x dev.
+    The FFmpeg 9.0.2 x64 build from BtbN is used.
+    The FFmpeg 9.0.2 win32 build from Defisym is used.
 
 2.5.7.1257 - 2026-10-17
 -----------------------
