@@ -14,7 +14,7 @@ IF NOT EXIST "..\avlib_vdplugin\_bin\Release_x86\avlib-1.vdplugin" (
   GOTO :END
 )
 
-IF NOT EXIST "..\avlib_vdplugin\ffmpeg\bin_win32\avcodec-62.dll" (
+IF NOT EXIST "..\avlib_vdplugin\ffmpeg\bin_win32\avcodec-63.dll" (
   ECHO FFmpeg DLLs not downloaded.
   GOTO :END
 )
@@ -66,11 +66,11 @@ COPY /Y /V "dist\win32\."                       "%PCKG_DIR%\."
 COPY /Y /V "dist\win32\plugins32\."             "%PCKG_DIR%\plugins32\."
 COPY /Y /V "dist\win32\vfwcodecs\."             "%PCKG_DIR%\vfwcodecs\."
 
-COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\avcodec-62.dll"    "%PCKG_DIR%\avcodec-62.dll"
-COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\avformat-62.dll"   "%PCKG_DIR%\avformat-62.dll"
-COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\avutil-60.dll"     "%PCKG_DIR%\avutil-60.dll"
-COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\swresample-6.dll"  "%PCKG_DIR%\swresample-6.dll"
-COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\swscale-9.dll"     "%PCKG_DIR%\swscale-9.dll"
+COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\avcodec-63.dll"    "%PCKG_DIR%\avcodec-63.dll"
+COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\avformat-63.dll"   "%PCKG_DIR%\avformat-63.dll"
+COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\avutil-61.dll"     "%PCKG_DIR%\avutil-61.dll"
+COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\swresample-7.dll"  "%PCKG_DIR%\swresample-7.dll"
+COPY /Y /V "..\avlib_vdplugin\ffmpeg\bin_win32\swscale-10.dll"    "%PCKG_DIR%\swscale-10.dll"
 
 COPY /Y /V "..\avlib_vdplugin\_bin\Release_x86\avlib-1.vdplugin"  "%PCKG_DIR%\plugins32\avlib-1.vdplugin"
 COPY /Y /V "..\avlib_vdplugin\Readme.md"                          "%PCKG_DIR%\plugins32\avlib-1_Readme.md"
